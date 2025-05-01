@@ -1,0 +1,24 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "tinder for dev",
+  "keywords": [
+    "shubham"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "node js , js"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
