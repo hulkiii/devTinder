@@ -1,14 +1,30 @@
-const express = require ("express")
+const express = require ("express");
+const connectDB = require("./config/database");
 const app = express();
-const {adminAuth} = require("./middewares/auth");
-app.use("/user", adminAuth);
-app.get("/user", (req,res) =>{
-    res.send("get the user data");
-})
-app.post("/admin", (req, res) =>{
-    res.send("post data here");
+const User = require("./models/user")
+
+app.post("/signup", async (req , res) =>{
+    //creating a new instance of user model
+    const user = new User({
+       firstName:"Sachin",
+       lastName:"Tendular",
+       emailId: "sachin@gmai.com",
+       password: "sachin@123"
+
+    });
+    await user.save();
+    res.send("user added sucessfully!");
 })
 
-app.listen(7777, ()=>{
-    console.log("running on 7777 port");
+connectDB()
+.then(() => {
+    console.log("Databse connection established...");
+    app.listen(7777, ()=>{
+        console.log("running on 7777 port");
+    })
 })
+.catch((err) =>{
+    console.error("datbase cannot be connected !...");
+});
+
+
