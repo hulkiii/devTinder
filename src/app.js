@@ -121,6 +121,7 @@ const User = require("./models/user");
 const cookie = require("cookie-parser");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const {userAuth}  = require("./middewares/auth")
 const app = express();
 app.use(express.json());
 app.use(cookieParser())
@@ -233,22 +234,10 @@ app.patch("/user", async (req, res) => {
     }
 });
 
-app.get("/profile", async (req, res) =>{
+app.get("/profile", userAuth, async (req, res) =>{
     try{
-        const cookies = req.cookies;
-        const {token} = cookies;
-        if(!token){
-            throw new Error("invalid token");
-        }
-
-        const decodedMessage = await jwt.verify(token , "DEV@Tiner$790");
-        const{_id} = decodedMessage;
-
-        const user = await User.findById(_id);
-        if(!user){
-            throw new Error("user does not exist");
-        }
-        res.send(user);
+      const user = req.user;
+      res.send(user);
     }catch(err){
         res.status(400).send("Error:" + err.message);
     }
