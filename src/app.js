@@ -153,11 +153,14 @@ app.post("/login", async (req, res) => {
         if (!isPasswordValid) throw new Error("Invalid credentials");
 
         // created a jwt token
-        const token = await jwt.sign({ _id: user._id }, "DEV@Tiner$790");
-        console.log(token);
+        const token = await jwt.sign({ _id: user._id }, "DEV@Tiner$790", {expiresIn: "1d",
+        });
+        // console.log(token);
 
         
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            expires: new Date(Date.now() + 8 * 3600000),
+        });
 
         res.send("Login successful!");
     } catch (err) {
