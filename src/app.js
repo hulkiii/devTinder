@@ -165,75 +165,6 @@ app.post("/login", async (req, res) => {
     }
 });
 
-
-// Get user by email
-app.get("/user", async (req, res) => {
-    const userEmail = req.body.emailId;
-    try {
-        const users = await User.find({ emailId: userEmail });
-        if (users.length === 0) {
-            return res.status(404).send({ error: "User not found" });
-        }
-        res.send(users);
-    } catch (err) {
-        res.status(400).send({ error: "Something went wrong" });
-    }
-});
-
-// Feed (get all users)
-app.get("/feed", async (req, res) => {
-    try {
-        const users = await User.find({});
-        res.send(users);
-    } catch (err) {
-        res.status(400).send({ error: "Something went wrong" });
-    }
-});
-
-// Delete user
-app.delete("/user", async (req, res) => {
-    const userId = req.body.userId;
-    try {
-        const user = await User.findByIdAndDelete(userId);
-        if (!user) return res.status(404).send({ error: "User not found" });
-        res.send("User deleted successfully");
-    } catch (err) {
-        res.status(400).send({ error: "Something went wrong" });
-    }
-});
-
-// Update user
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId;
-    const data = req.body;
-
-    try {
-        const ALLOWED_UPDATES = ["photoUrl", "about", "gender", "age", "skills"];
-        const isUpdateAllowed = Object.keys(data).every((k) =>
-            ALLOWED_UPDATES.includes(k)
-        );
-
-        if (!isUpdateAllowed) {
-            throw new Error("Update not allowed");
-        }
-
-        if (data.skills && data.skills.length > 10) {
-            throw new Error("Skills cannot be more than 10");
-        }
-
-        const user = await User.findByIdAndUpdate(userId, data, {
-            new: true,
-            runValidators: true,
-        });
-
-        if (!user) return res.status(404).send({ error: "User not found" });
-
-        res.send("User updated successfully");
-    } catch (err) {
-        res.status(400).send({ error: "Update failed: " + err.message });
-    }
-});
-
 app.get("/profile", userAuth, async (req, res) =>{
     try{
       const user = req.user;
@@ -243,6 +174,87 @@ app.get("/profile", userAuth, async (req, res) =>{
     }
     
 });
+
+//connection request
+
+app.post("/sendConnectionRequest", userAuth, async(req ,res) =>{
+    const user = req.user;
+
+    //sending a connection  request
+    console.log("sending a connection req");
+
+    res.send(user.firstName +  " sent the connected request")
+})
+
+// Get user by email
+// app.get("/user", async (req, res) => {
+//     const userEmail = req.body.emailId;
+//     try {
+//         const users = await User.find({ emailId: userEmail });
+//         if (users.length === 0) {
+//             return res.status(404).send({ error: "User not found" });
+//         }
+//         res.send(users);
+//     } catch (err) {
+//         res.status(400).send({ error: "Something went wrong" });
+//     }
+// });
+
+// Feed (get all users)
+// app.get("/feed", async (req, res) => {
+//     try {
+//         const users = await User.find({});
+//         res.send(users);
+//     } catch (err) {
+//         res.status(400).send({ error: "Something went wrong" });
+//     }
+// });
+
+// Delete user
+// app.delete("/user", async (req, res) => {
+//     const userId = req.body.userId;
+//     try {
+//         const user = await User.findByIdAndDelete(userId);
+//         if (!user) return res.status(404).send({ error: "User not found" });
+//         res.send("User deleted successfully");
+//     } catch (err) {
+//         res.status(400).send({ error: "Something went wrong" });
+//     }
+// });
+
+// Update user
+// app.patch("/user", async (req, res) => {
+//     const userId = req.body.userId;
+//     const data = req.body;
+
+//     try {
+//         const ALLOWED_UPDATES = ["photoUrl", "about", "gender", "age", "skills"];
+//         const isUpdateAllowed = Object.keys(data).every((k) =>
+//             ALLOWED_UPDATES.includes(k)
+//         );
+
+//         if (!isUpdateAllowed) {
+//             throw new Error("Update not allowed");
+//         }
+
+//         if (data.skills && data.skills.length > 10) {
+//             throw new Error("Skills cannot be more than 10");
+//         }
+
+//         const user = await User.findByIdAndUpdate(userId, data, {
+//             new: true,
+//             runValidators: true,
+//         });
+
+//         if (!user) return res.status(404).send({ error: "User not found" });
+
+//         res.send("User updated successfully");
+//     } catch (err) {
+//         res.status(400).send({ error: "Update failed: " + err.message });
+//     }
+// });
+
+
 
 // Connect DB and start server
 connectDB()
